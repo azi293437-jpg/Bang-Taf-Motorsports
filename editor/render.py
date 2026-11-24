@@ -78,9 +78,9 @@ aroll(o(9.6), o(15.38), 1.0)
 aroll(o(15.38), o(21.42), 1.12)
 broll(o(22.94), o(26.2), "IMG_1121", 0.6, [(0, 1.5), (2.0, 0.9)], 1.05, 1.16)
 aroll(o(30.22), o(32.95), 1.0)
-aroll(o(35.04), o(38.86), 1.12)
-broll(o(38.86), o(41.62), "IMG_1119", 0.0, [(0, 0.8)], 1.0, 1.12)
-broll(o(41.62), o(44.42), "IMG_1122", 0.4, [(0, 1.3), (1.2, 0.8)], 1.15, 1.02)
+aroll(o(35.04), o(38.84), 1.12)
+broll(o(41.78), o(43.28), "IMG_1119", 0.0, [(0, 0.9)], 1.0, 1.12)
+broll(o(43.28), o(44.42), "IMG_1122", 0.4, [(0, 1.3), (0.6, 0.8)], 1.15, 1.02)
 aroll(o(44.42), o(46.42), 1.0)
 aroll(o(46.78), o(51.9), 1.12)
 broll(o(51.9), o(55.6), "IMG_1124", 0.0, [(0, 0.78)], 1.25, 1.02)
@@ -104,9 +104,14 @@ def base_frame(t, shot=None):
     lt = t - s["o0"]; d = s["o1"] - s["o0"]
     if s["src"] is None:
         img = R["IMG_1132"].get(out2src_aroll(t))
+        pi = piece_index(t); first = piece_index(s["o0"] + 1e-4)
+        if (pi - first) % 2 == 1:
+            z_extra = 1.07
+        else:
+            z_extra = 1.0
     else:
-        img = R[s["clip"]].get(s["src"](lt))
-    z = s["zoom"](lt, d)
+        img = R[s["clip"]].get(s["src"](lt)); z_extra = 1.0
+    z = s["zoom"](lt, d) * z_extra
     # transition punch-in at shot start
     if lt < 0.28 and s is not SHOTS[0]:
         z *= 1 + 0.10 * (1 - ease_out_cubic(lt / 0.28))
@@ -357,7 +362,7 @@ def draw_maintenance(cv, t):
 
 # ---------------------------------------------------------------- penat naik motor
 def draw_motor(cv, t):
-    a, b = o(39.9), o(44.42)
+    a, b = o(41.9), o(44.42)
     if not (a <= t < b): return
     lt, rt = t - a, b - t
     out_a = clamp(rt / 0.2)
