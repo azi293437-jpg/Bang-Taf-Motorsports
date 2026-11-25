@@ -1,0 +1,39 @@
+# systemd unit untuk menjalankan gateway Hermes Agent 24/7 di VPS (Ubuntu).
+# Ini fail ciptaan sendiri (README rasmi tidak sediakan arahan servis) — sahkan
+# dahulu bahawa `hermes gateway` berjalan dengan betul secara manual sebelum guna.
+#
+# CARA PASANG (jalankan sebagai root):
+#   1. Cipta user khas (jangan jalankan agent sebagai root):
+#        adduser --disabled-password --gecos "" hermes
+#   2. Log masuk sebagai user itu dan pasang Hermes + setup:
+#        su - hermes
+#        curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+#        source ~/.bashrc && hermes setup && hermes gateway setup
+#        which hermes          # salin path ini ke ExecStart di bawah jika berbeza
+#        exit
+#   3. Salin fail ini:
+#        cp hermes-gateway.service /etc/systemd/system/
+#   4. Aktifkan:
+#        systemctl daemon-reload
+#        systemctl enable --now hermes-gateway
+#   5. Semak / lihat log:
+#        systemctl status hermes-gateway
+#        journalctl -u hermes-gateway -f
+
+[Unit]
+Description=Hermes Agent messaging gateway
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=hermes
+WorkingDirectory=/home/hermes
+# Tukar path jika `which hermes` memberi lokasi lain.
+ExecStart=/home/hermes/.local/bin/hermes gateway
+Restart=always
+RestartSec=10
+Environment=HOME=/home/hermes
+
+[Install]
+WantedBy=multi-user.target
