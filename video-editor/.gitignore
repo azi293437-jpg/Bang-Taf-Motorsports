@@ -1,0 +1,11 @@
+raw/
+assets/
+gfx/
+sfx/
+work/
+out/
+stills/
+*.mov
+*.mp4
+*.wav
+__pycache__/
