@@ -7,7 +7,7 @@ Panduan ini ialah standard editing yang dipelajari daripada video rujukan. Ia di
 | Teknik | Dalam video rujukan | Cara ia diaplikasi untuk Bang Taf |
 |---|---|---|
 | Background berubah ikut topik | Talent dirakam depan green screen; background bertukar setiap kali topik baru (rumah → MRT → kelas → jalan → bandar) | Chroma key automatik. Background ikut topik: bangunan BNM (berita), KL skyline (ekonomi/OPR), studio navy-emas (penerangan), merah (amaran/salah faham), hijau (data positif), pink "dream" (lawak / angan-angan) |
-| Kad tajuk gaya berita | Kotak putih, teks hitam besar, label jenama di bucu | Kad putih + highlight merah + label **BANG TAF** pada 3 saat pertama (hook) |
+| Kad tajuk gaya berita | Kotak putih, teks hitam besar, label jenama di bucu | Kad putih + highlight merah + logo Bang Taf di bucu, pada 3 saat pertama (hook) |
 | Screenshot / bukti | Tweet, artikel, komen ditimbunkan atas dada | Kad grafik (infografik BNM, poster, graf OPR) muncul dengan animasi pop |
 | Subtitle | Teks putih atas kotak gelap separa telus, di tengah skrin (paras dada) | Sama, + keyword diwarnakan: **emas** = penting, **merah** = negatif/salah, **hijau** = positif |
 | Punch-in / extreme zoom | Zoom ekstrem ke muka untuk punchline ("gak mungkin") | Zoom 1.0 → 1.15 → 1.3 bergilir setiap jump cut; zoom 1.45–1.6 + goncangan untuk lawak/kejutan |
