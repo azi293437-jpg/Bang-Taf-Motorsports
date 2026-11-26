@@ -38,6 +38,7 @@ for i, (c, s, e, txt, op) in enumerate(P):
     pieces.append(dict(i=i, clip=c, s=s, e=e, n=n, f0=cur, txt=txt, op=op))
     cur += n
 TOTAL = cur
+OUT_N = int(2.2 * FPS)
 
 def anchor(a):
     c, t = a
@@ -178,6 +179,28 @@ def pill(emo, txt, fsize=50, base=WHITE, fill=(14, 20, 44, 235), border=GOLD, ma
     b.alpha_composite(t, (28 + ew, (h - t.height) // 2))
     return shadowed(b, 10, 6, 120)
 
+# ------------------------------------------------------------------ logo
+_lc = {}
+def logo_badge(w, border=4):
+    k = (w, border)
+    if k not in _lc:
+        im = Image.open(S + '/logo/logo.png').convert('RGBA')
+        h = int(im.height * w / im.width)
+        im = im.resize((w, h), Image.LANCZOS)
+        r = max(8, w // 12)
+        m = Image.new('L', (w, h), 0); ImageDraw.Draw(m).rounded_rectangle([0, 0, w - 1, h - 1], r, fill=255)
+        im.putalpha(m)
+        if border: ImageDraw.Draw(im).rounded_rectangle([0, 0, w - 1, h - 1], r, outline=GOLD, width=border)
+        _lc[k] = im
+    return _lc[k]
+_wm = None
+def watermark(cv):
+    global _wm
+    if _wm is None:
+        _wm = shadowed(logo_badge(175, 3), 8, 4, 130)
+        a = _wm.getchannel('A').point(lambda v: int(v * 0.92)); _wm.putalpha(a)
+    cv.alpha_composite(_wm, (40 - 20, 125 - 20))
+
 # ------------------------------------------------------------------ backgrounds
 BG = {}
 def load_bg(name):
@@ -262,12 +285,11 @@ class Ov:
                 f = font('Inter-Black.otf', 82)
                 lines = [rich([(w, (220, 30, 40) if c == GOLD else c) for w, c in toks(l, (10, 10, 10))], f, maxw=900, align='left') for l in p['lines']]
                 # recolour highlight gold -> red for white card
-                hh = sum(l.height for l in lines) + 40 + 70
+                hh = sum(l.height for l in lines) + 40 + 120
                 b = rbox(960, hh, 10, (255, 255, 255, 250))
                 y = 30
                 for l in lines: b.alpha_composite(l, (34, y)); y += l.height - 6
-                lab = rich([('BANG TAF', (10, 10, 10))], font('Inter-Black.otf', 40))
-                b.alpha_composite(lab, (960 - lab.width - 30, hh - lab.height - 18))
+                lg = logo_badge(170, 3); b.alpha_composite(lg, (960 - lg.width - 22, hh - lg.height - 16))
                 ImageDraw.Draw(b).rectangle([34, hh - 44, 134, hh - 36], fill=(230, 30, 40))
                 return shadowed(b)
             im = s.c('i', mk); yy = 1450 + (1 - ease_out(u / 0.3)) * 120
@@ -391,14 +413,14 @@ class Ov:
                 num = float(val.rstrip('%')); dec = len(val.split('.')[1].rstrip('%')) if '.' in val else 0
                 shown = f"{num * v:.{dec}f}%"
                 def mkb(em=em, lab=lab):
-                    b = rbox(940, 240, 30, (255, 255, 255, 245), GOLD, 5)
+                    b = rbox(940, 232, 30, (255, 255, 255, 245), GOLD, 5)
                     e = emoji(em, 120); b.alpha_composite(e, (34, (240 - e.height) // 2))
                     l = rich([(lab, (70, 80, 110))], font('Inter-Bold.otf', 42), align='left'); b.alpha_composite(l, (190, 40))
                     return shadowed(b, 10, 6, 120)
                 base = s.c(('b', j), mkb).copy()
                 nt = rich([(shown, (20, 120, 60) if j < 2 else NAVY)], font('Inter-Black.otf', 104), align='left')
                 base.alpha_composite(nt, (190 + 30, 30 + 92))
-                paste(cv, base, 540, p['y'] + j * 275 + 135, ease_back((t - tt) / 0.25), al)
+                paste(cv, base, 540, p['y'] + j * 262 + 125, ease_back((t - tt) / 0.25), al)
         elif k == 'chips':
             for j, (em, lab, tt) in enumerate(p['items']):
                 if t < tt: continue
@@ -422,7 +444,7 @@ class Ov:
                 t2 = rich([('(kiraan kadar rata, ilustrasi sahaja)', (170, 180, 210))], font('Inter-SemiBold.otf', 30))
                 b.alpha_composite(t_, ((960 - t_.width) // 2, 30)); b.alpha_composite(t2, ((960 - t2.width) // 2, 98))
                 return shadowed(b)
-            pan = s.c('p', mkp); top = 220; paste(cv, pan, 540, top + pan.height / 2 - 30, 0.9 + 0.1 * sc, min(1, u / 0.12) * al)
+            pan = s.c('p', mkp); top = 265; paste(cv, pan, 540, top + pan.height / 2 - 30, 0.9 + 0.1 * sc, min(1, u / 0.12) * al)
             rows = [('2.5%', 12150, 'RM12,150', p['t1'], (80, 200, 120)), ('3.0%', 14580, 'RM14,580', p['t2'], (255, 90, 90))]
             for j, (rate, val, lab, tt, col) in enumerate(rows):
                 if t < tt: continue
@@ -445,7 +467,7 @@ class Ov:
                 t2 = rich([('(kiraan kadar rata, ilustrasi sahaja)', (170, 180, 210))], font('Inter-SemiBold.otf', 30))
                 b.alpha_composite(t_, ((960 - t_.width) // 2, 30)); b.alpha_composite(t2, ((960 - t2.width) // 2, 98))
                 return shadowed(b)
-            pan = s.c('p', mkp); top = 220; paste(cv, pan, 540, top + pan.height / 2 - 30, 0.9 + 0.1 * sc, min(1, u / 0.12) * al)
+            pan = s.c('p', mkp); top = 265; paste(cv, pan, 540, top + pan.height / 2 - 30, 0.9 + 0.1 * sc, min(1, u / 0.12) * al)
             cols = [('5 tahun', 'RM1,035', 'RM62,100', p['t1'], '🙂'), ('9 tahun', 'RM635', 'RM68,580', p['t2'], '😍')]
             for j, (ten, inst, tot, tt, em) in enumerate(cols):
                 if t < tt: continue
@@ -516,6 +538,7 @@ def compose(fr_raw, p, fi):
         person_pip(cv, kim, sc)
     for o in overlays:
         if o.t0 <= t < o.t1: o.draw(cv, t)
+    watermark(cv)
     # captions
     cy = 1300 if layout == 'full' else 1125
     for c in captions:
@@ -529,6 +552,25 @@ def compose(fr_raw, p, fi):
     if p['i'] > 0 and pieces[p['i'] - 1]['op'].get('bg') != op.get('bg') and u < 0.14:
         a = int(150 * (1 - u / 0.14))
         cv.alpha_composite(Image.new('RGBA', (W, H), (255, 255, 255, a)))
+    return cv.convert('RGB')
+
+def outro(fi):
+    t = fi / FPS; u = (fi - TOTAL) / FPS
+    cv = bg_frame('studio', t).copy()
+    lg = s_out = None
+    big = shadowed(logo_badge(760, 8), 20, 12, 170)
+    sc = ease_back(u / 0.45)
+    paste(cv, big, 540, 820 - 20 * ease_out(u / 1.5), sc * (1 + 0.02 * u))
+    if u > 0.45:
+        tx = pill('🔔', 'FOLLOW *Bang Taf*', 64, maxw=980)
+        paste(cv, tx, 540, 1230, ease_back((u - 0.45) / 0.3))
+    if u > 0.75:
+        t2 = pill('🚗', 'Tips kereta & loan', 44, WHITE, (220, 30, 40, 245), WHITE)
+        paste(cv, t2, 540, 1370, ease_back((u - 0.75) / 0.3))
+    if u < 0.12:
+        cv.alpha_composite(Image.new('RGBA', (W, H), (255, 255, 255, int(170 * (1 - u / 0.12)))))
+    if u > 1.9:
+        cv.alpha_composite(Image.new('RGBA', (W, H), (0, 0, 0, int(255 * min(1, (u - 1.9) / 0.3)))))
     return cv.convert('RGB')
 
 # ------------------------------------------------------------------ workers
@@ -547,16 +589,19 @@ def render_range(a, b, out):
             if len(buf) == 720 * 1280 * 3: last = np.frombuffer(buf, np.uint8).reshape(1280, 720, 3)
             enc.stdin.write(compose(last, p, fi).tobytes())
         dec.stdout.close(); dec.wait()
+    for fi in range(max(a, TOTAL), min(b, TOTAL + OUT_N)):
+        enc.stdin.write(outro(fi).tobytes())
     enc.stdin.close(); enc.wait()
 
 if __name__ == '__main__':
     cmd = sys.argv[1]
     if cmd == 'info':
-        print('pieces', len(pieces), 'frames', TOTAL, 'sec', TOTAL / FPS)
+        print('pieces', len(pieces), 'frames', TOTAL + OUT_N, 'sec', (TOTAL + OUT_N) / FPS)
         for c in captions[:8]: print(round(c[0], 2), round(c[1], 2), ' '.join(w for w, _ in c[2]))
     elif cmd == 'still':
         # still <frame> <out.png>
         fi = int(sys.argv[2])
+        if fi >= TOTAL: outro(fi).save(sys.argv[3]); sys.exit()
         p = [q for q in pieces if q['f0'] <= fi < q['f0'] + q['n']][0]
         st = p['s'] + (fi - p['f0']) / FPS * SPEED
         raw = subprocess.run(['ffmpeg', '-v', 'error', '-ss', f'{st:.4f}', '-i', CLIPS[p['clip']], '-frames:v', '1', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-'], capture_output=True).stdout

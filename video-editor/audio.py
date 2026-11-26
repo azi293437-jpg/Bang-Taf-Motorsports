@@ -4,7 +4,7 @@ S = os.path.dirname(os.path.abspath(__file__))
 _sp = importlib.util.spec_from_file_location('render', os.path.join(S, 'render.py')); R = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(R)
 SR = 44100; FPS = R.FPS; SPEED = R.SPEED
 OUT = S + '/out'; os.makedirs(OUT, exist_ok=True)
-pieces = R.pieces; TOTAL = R.TOTAL / FPS
+pieces = R.pieces; SPEECH = R.TOTAL / FPS; TOTAL = (R.TOTAL + R.OUT_N) / FPS
 
 # ---------- 1. voice: cut, speed, clean, normalise
 ins = {'A': 0, 'B': 1, 'C': 2}
@@ -47,7 +47,7 @@ for key, hold in (('{TAK!}', 1.0), ('{TETAPI!}', 0.9)):
     gain[a:b] = 0.0
     r = int(0.4 * SR); gain[b:b + r] *= np.linspace(0, 1, r)
 fi = int(0.4 * SR); fo = int(1.5 * SR)
-gain[:fi] *= np.linspace(0, 1, fi); gain[-fo:] *= np.linspace(1, 0, fo)
+gain[:fi] *= np.linspace(0, 1, fi); gain[int(SPEECH * SR):] = 0.22; gain[-fo:] *= np.linspace(1, 0, fo)
 mix = v * 1.0 + music * gain
 
 # ---------- 3. sfx
@@ -68,6 +68,7 @@ for p in pieces:
         t = p['f0'] / FPS
         if not any(abs(t - e[0]) < 0.25 and e[1] == 'whoosh' for e in ev): ev.append((t - 0.12, 'whoosh'))
 t0, _ = piece_t('{TETAPI!}'); ev.append((t0 - 1.0, 'riser'))
+ev += [(SPEECH - 0.15, 'whoosh'), (SPEECH + 0.05, 'boom'), (SPEECH + 0.45, 'pop')]
 for t, n in ev:
     a = SFX[n] * VOL[n]; i = max(0, int(t * SR)); j = min(N, i + len(a))
     mix[i:j] += a[:j - i]

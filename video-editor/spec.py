@@ -83,7 +83,7 @@ O = [
  ('sticker', ('A',22.70), ('A',23.42), dict(emoji="🚗", x=830, y=1480, size=170, sfx='pop')),
  # apa itu OPR
  ('chip', ('A',34.08), ('A',38.75), dict(emoji="🏦", text="OPR = *Overnight Policy Rate*", y=1470, sfx='pop')),
- ('card', ('A',39.66), ('A',47.35), dict(img='c_graf', y=250, w=960, sfx='whoosh')),
+ ('card', ('A',39.66), ('A',47.35), dict(img='c_graf', y=275, w=960, sfx='whoosh')),
  ('chip', ('A',43.97), ('A',47.35), dict(emoji="✅", text="*KEKAL* 2.75%", y=820, sfx='ding')),
  ('icons', ('A',47.86), ('A',51.95), dict(title="OPR beri kesan kepada:", items=[("🏠","Rumah",('A',48.2)),("🚗","Kereta",('A',49.0)),("🏢","Bisnes",('A',49.7)),("💳","Pinjaman",('A',50.6))], y=330)),
  # salah faham
@@ -103,7 +103,7 @@ O = [
  ('sticker', ('A',156.5), ('A',159.55), dict(emoji="👀", x=860, y=330, size=170, sfx='pop')),
  ('list', ('A',161.98), ('C',4.45), dict(title="Yang korang WAJIB semak:", items=[("💰","Deposit",('A',163.57)),("🧾","Jumlah loan",('A',165.07)),("📅","Tempoh (tahun)",('A',168.42)),("⭐","Instalment bulanan",('C',2.39))], y=250, check=True)),
  # konteks ekonomi
- ('card', ('C',15.58), ('C',21.45), dict(img='c_poster', y=220, w=640, sfx='whoosh')),
+ ('card', ('C',15.58), ('C',21.45), dict(img='c_poster', y=270, w=600, sfx='whoosh')),
  ('stats', ('C',37.70), ('C',49.15), dict(items=[("📈","KDNK Suku Ke-2 2026","6.0%",('C',39.78)),("🛒","Inflasi Julai 2026","1.8%",('C',47.08)),("🏦","OPR Semasa","2.75%",('C',37.70))], y=230)),
  ('sticker', ('C',52.71), ('C',55.80), dict(emoji="📉", x=230, y=1460, size=160, sfx='pop', cross=True)),
  ('sticker', ('C',54.04), ('C',55.80), dict(emoji="💸", x=850, y=1460, size=160, sfx='pop', cross=True)),

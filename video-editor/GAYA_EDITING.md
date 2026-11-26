@@ -12,6 +12,7 @@ Panduan ini ialah standard editing yang dipelajari daripada video rujukan. Ia di
 | Subtitle | Teks putih atas kotak gelap separa telus, di tengah skrin (paras dada) | Sama, + keyword diwarnakan: **emas** = penting, **merah** = negatif/salah, **hijau** = positif |
 | Punch-in / extreme zoom | Zoom ekstrem ke muka untuk punchline ("gak mungkin") | Zoom 1.0 → 1.15 → 1.3 bergilir setiap jump cut; zoom 1.45–1.6 + goncangan untuk lawak/kejutan |
 | Ending | Soalan kepada penonton + ikon "??" besar di belakang kepala | Soalan CTA + "??" biru di belakang kepala + ajak komen |
+| Branding | Watermark TikTok | Logo Bang Taf Motorsport: watermark kiri atas sepanjang video, dalam kad tajuk hook, dan end card "FOLLOW Bang Taf" 2.2 saat |
 | Pacing | Tiada dead air, setiap ayat bertukar visual | Semua jeda > 0.25s dibuang, retake dibuang, pertuturan dilaju 1.1x |
 
 ## 2. Peraturan wajib setiap video
