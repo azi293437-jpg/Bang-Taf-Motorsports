@@ -66,7 +66,7 @@ Rebuild with `MODELS=… BUILD=… src/build.sh all`. See the comments at the to
 
 ### Notes before publishing
 
-1. **Logo:** no official BANG TAF logo was supplied, so the end card uses a clean typographic wordmark. Send the official logo file and it will be dropped in unchanged.
+1. **Logo:** the official BANG TAF Motorsport logo (`assets/bangtaf_logo.jpg`, supplied by the client) is used unaltered in the **Bahasa Melayu** version: as a corner bug throughout and as the end-card reveal. It is only cropped to its frame. The English version keeps the typographic wordmark. To add the logo there too, copy the `"logo"` entry from `ms.text` to `en.text` in `src/script.json`. The supplied file is a small JPEG (365×259); a high-resolution PNG, ideally with a transparent background, would render sharper.
 2. **Proton visuals:** the cars are illustrative 3D wireframes built to each model's rough proportions and labelled *"Illustrative 3D wireframe · not an official image"*. No Proton photos or logos are used. Licensed official Proton press imagery can be composited into scene 5 if you have it.
 3. **Malay voice licence:** the Malay voice model is licensed **non-commercial (CC-BY-NC-4.0)**. If BANG TAF content is monetised or sponsored, re-voice the Malay track with a human narrator or a commercially licensed TTS. The scripts are in `src/script.json`, and only `vo_ms.wav` needs replacing. The English voice (Apache-2.0) and all music and SFX are free for commercial use.
 4. **Scripts:** no narration script was provided, so the English and Malay scripts in `src/script.json` were written to fit the brief and the 60-second timing. Have a native speaker review the Malay.

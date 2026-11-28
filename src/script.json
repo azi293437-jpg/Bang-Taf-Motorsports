@@ -405,7 +405,16 @@
       ]
      ]
     }
-   ]
+   ],
+   "logo": {
+    "file": "../assets/bangtaf_logo.jpg",
+    "crop": [
+     22,
+     0,
+     343,
+     212
+    ]
+   }
   }
  }
 }

@@ -22,7 +22,30 @@ const FONT = '"Inter", "Inter Display", "DejaVu Sans", sans-serif';
 const FONTD = '"Inter Display", "Inter", "DejaVu Sans", sans-serif';
 
 let TXT = {}, CUES = [];
-window.setup = (d) => { TXT = d.text; CUES = d.cues; };
+let LOGO = null, logoLoad = Promise.resolve();
+// Official logo (optional, per language): used unaltered, only cropped to its frame and shown as a badge.
+window.setup = (d) => {
+  TXT = d.text; CUES = d.cues;
+  if (d.logo) logoLoad = new Promise((res) => { const im = new Image(); im.onload = () => {
+    const [sx, sy, sw, sh] = d.logoCrop || [0, 0, im.width, im.height];
+    const c = document.createElement('canvas'); c.width = sw * 4; c.height = sh * 4; const g = c.getContext('2d');
+    g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high'; g.drawImage(im, sx, sy, sw, sh, 0, 0, c.width, c.height);
+    LOGO = c; res(); }; im.onerror = () => res(); im.src = d.logo; });
+};
+function drawLogo(cx, cy, w, a = 1, o = {}) {
+  if (!LOGO) return;
+  const h = w * LOGO.height / LOGO.width, x = cx - w / 2, y = cy - h / 2, r = Math.max(6, w * 0.035);
+  ctx.save(); alpha(a);
+  if (o.glow) { ctx.shadowColor = 'rgba(30,167,255,0.55)'; ctx.shadowBlur = o.glow; ctx.fillStyle = '#000'; ctx.fill(rrect(x, y, w, h, r)); ctx.shadowBlur = 0; }
+  ctx.save(); ctx.clip(rrect(x, y, w, h, r)); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(LOGO, x, y, w, h);
+  if (o.sweep != null && o.sweep > 0 && o.sweep < 1) { // light glint passing over the badge
+    const sx = lerp(x - w * 0.4, x + w * 1.4, o.sweep); const g = ctx.createLinearGradient(sx - w * 0.18, y, sx + w * 0.18, y + h);
+    g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, 'rgba(255,255,255,0.35)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.globalCompositeOperation = 'soft-light'; ctx.fillStyle = g; ctx.fillRect(x, y, w, h); }
+  ctx.restore();
+  ctx.lineWidth = Math.max(1.5, w * 0.004); ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.stroke(rrect(x, y, w, h, r));
+  ctx.restore();
+}
 
 // ---------------------------------------------------------------- math
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
@@ -417,6 +440,10 @@ function finish(t) {
 
 // ---------------------------------------------------------------- UI chrome
 function brandBug(t, a = 1) {
+  if (LOGO) return withAlpha(a, () => {
+    drawLogo(110 + 64, 156, 128, 1);
+    text('AUTOMOTIVE INTELLIGENCE', 110 + 128 + 18, 157, { size: 18, weight: 600, spacing: 4, align: 'left', color: COL.silver, a: 0.85 });
+  });
   withAlpha(a, () => {
     text('BANG TAF', 110, 172, { size: 26, weight: 900, spacing: 5, align: 'left', color: COL.white, display: true });
     const w = measure('BANG TAF', 26, 900, 5, true);
@@ -1006,7 +1033,7 @@ function scene6UI(t) {
     brandBug(t, 1 - prog(t, 55.4, 56.0));
     // tagline over highway
     const f0 = 53.9;
-    const fa = 1 - prog(t, 56.0, 56.5);
+    const fa = LOGO ? 1 - prog(t, 55.3, 55.85) : 1 - prog(t, 56.0, 56.5);
     withAlpha(fa, () => { const lines = wrap(TXT.future, 64, 900, 860);
       lines.forEach((l, i) => kinetic(l, CX, 400 + i * 78, t, f0 + i * 0.25, { size: 64, weight: 900, display: true, spacing: 2, glow: 18, stagger: 0.09 })); });
     // logo reveal
@@ -1019,7 +1046,11 @@ function scene6UI(t) {
       ctx.save(); ctx.globalCompositeOperation = 'lighter';
       for (let i = 0; i < 2; i++) { alpha(eo(lr) * (0.35 - i * 0.12)); ctx.strokeStyle = COL.blue; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(CX, y, 330 + i * 46 + Math.sin(t * 1.4 + i) * 4, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * eio(lr)); ctx.stroke(); }
       ctx.restore();
-      // wordmark (placeholder typographic wordmark; replace with the official logo file if available)
+      if (LOGO) {
+        const lw0 = 640, s0 = lerp(1.12, 1, eo(lr));
+        drawLogo(CX, y - 20, lw0 * s0, eo(lr), { glow: 50 * eo(lr), sweep: prog(t, 56.5, 57.7) });
+      } else {
+      // wordmark (placeholder typographic wordmark, used when no official logo file is supplied)
       const size = 136; const word = 'BANG TAF';
       const s = lerp(1.15, 1, eo(lr));
       ctx.save(); ctx.translate(CX, y); ctx.scale(s, s);
@@ -1033,16 +1064,17 @@ function scene6UI(t) {
       const sg = ctx.createLinearGradient(sx - 120, 0, sx + 120, 0); sg.addColorStop(0, 'rgba(143,220,255,0)'); sg.addColorStop(0.5, 'rgba(200,240,255,0.95)'); sg.addColorStop(1, 'rgba(143,220,255,0)');
       ctx.globalCompositeOperation = 'source-atop'; ctx.fillStyle = sg; ctx.fillRect(-mw / 2 - 20, -size / 2, mw + 40, size);
       ctx.restore();
-      ctx.save(); ctx.globalCompositeOperation = 'lighter'; alpha(eo(lr)); ctx.fillStyle = COL.blue; const lw = 520 * eio(prog(t, 56.3, 57.1)); ctx.fillRect(CX - lw / 2, y + 108, lw, 5); ctx.restore();
-      text(TXT.tagline, CX, y + 160, { size: 32, weight: 700, spacing: 12, color: COL.blueHi, a: eo(prog(t, 56.6, 57.2)) });
+      }
+      ctx.save(); ctx.globalCompositeOperation = 'lighter'; alpha(eo(lr)); ctx.fillStyle = COL.blue; const ly = LOGO ? y + 215 : y + 108; const lw = 520 * eio(prog(t, 56.3, 57.1)); ctx.fillRect(CX - lw / 2, ly, lw, 5); ctx.restore();
+      text(TXT.tagline, CX, (LOGO ? y + 262 : y + 160), { size: 32, weight: 700, spacing: 12, color: COL.blueHi, a: eo(prog(t, 56.6, 57.2)) });
       // future line + CTA
-      text(TXT.future, CX, y + 290, { size: TXT.future.length > 30 ? 34 : 40, weight: 900, spacing: 2, display: true, a: eo(prog(t, 56.9, 57.4)) });
+      text(TXT.future, CX, (LOGO ? y + 340 : y + 290), { size: TXT.future.length > 30 ? 34 : 40, weight: 900, spacing: 2, display: true, a: eo(prog(t, 56.9, 57.4)) });
       const cp = eo(prog(t, 57.3, 57.9));
-      const bw = 560, by = y + 410; const pulse = 1 + 0.03 * Math.sin(t * 6);
+      const bw = 560, by = LOGO ? y + 440 : y + 410; const pulse = 1 + 0.03 * Math.sin(t * 6);
       ctx.save(); ctx.translate(CX, by); ctx.scale(pulse * lerp(0.8, 1, cp), pulse * lerp(0.8, 1, cp)); alpha(cp);
       const r = rrect(-bw / 2, -46, bw, 92, 46); ctx.fillStyle = COL.blue; ctx.shadowColor = 'rgba(30,167,255,0.8)'; ctx.shadowBlur = 30; ctx.fill(r); ctx.restore();
       text(TXT.cta1, CX, by + 1, { size: 40, weight: 900, spacing: 3, a: cp });
-      text(TXT.cta2, CX, by + 92, { size: 28, weight: 700, spacing: 3, color: COL.silver, a: eo(prog(t, 57.6, 58.2)) });
+      text(TXT.cta2, CX, by + (LOGO ? 78 : 92), { size: 28, weight: 700, spacing: 3, color: COL.silver, a: eo(prog(t, 57.6, 58.2)) });
     }
   });
 }
@@ -1073,6 +1105,7 @@ window.renderFrame = (t) => {
   if (t < 0.35) { ctx.save(); ctx.globalAlpha = 1 - t / 0.35; ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
 };
 window.ready = async () => {
+  await logoLoad;
   await Promise.all([
     document.fonts.load(`900 40px "Inter Display"`), document.fonts.load(`900 40px "Inter"`), document.fonts.load(`800 40px "Inter"`),
     document.fonts.load(`700 40px "Inter"`), document.fonts.load(`600 40px "Inter"`), document.fonts.load(`500 40px "Inter"`),

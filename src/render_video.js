@@ -16,7 +16,10 @@ async function openPage(browser) {
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 }, deviceScaleFactor: 1 });
   page.on('pageerror', (e) => console.error('PAGE ERROR', e.message));
   await page.goto(pageUrl);
-  const ok = await page.evaluate(async (d) => { window.setup(d); return window.ready(); }, { text: script[lang].text, cues });
+  const lg = script[lang].text.logo;
+  let logo = null;
+  if (lg) { const f = path.join(__dirname, lg.file); logo = `data:image/${/\.png$/i.test(f) ? 'png' : 'jpeg'};base64,` + fs.readFileSync(f).toString('base64'); }
+  const ok = await page.evaluate(async (d) => { window.setup(d); return window.ready(); }, { text: script[lang].text, cues, logo, logoCrop: lg ? lg.crop : null });
   if (!ok) console.error('WARNING: Inter font not confirmed');
   return page;
 }
