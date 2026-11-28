@@ -48,3 +48,16 @@ Langkah:
 4. Tulis `spec.py` (susunan potongan, subtitle dibetulkan, overlay)
 5. `python3 render.py info` → semak durasi; `python3 render.py still <frame> out.png` → semak visual
 6. `python3 audio.py` kemudian `python3 render.py range a b part.mp4` (selari), gabung & mux.
+
+## 4. Ciri enjin tambahan (sejak video #2)
+
+- **GIF meme** (`gif` overlay) – GIF dari folder bahan dimainkan dalam bingkai putih, tepat pada punchline.
+- **Nombor berkira** (`bignum` dengan `count=True`) – angka besar naik dari 0 (cth. 22,632 unit).
+- **Carta donut market share** (`share`) + ikon "1 dari 4 kereta".
+- **Kad screenshot dengan label sumber** (`card` + `src`) atau label nama model (`label`), boleh disusun jadi kolaj (`x`, `rot`).
+- **Garbage matte** – buang bucu bilik di luar green screen.
+- **Klip dikesan automatik** dari `raw/*.mov` (huruf pertama nama fail = ID klip).
+- **Cue audio dalam spec**: `musicstop=<saat>` (muzik senyap untuk kejutan), `riser=True` (bunyi naik sebelum potongan).
+- **Teks end card** boleh diubah per video: `OUTRO = ("FOLLOW *Bang Taf*", "Part 2: ...")`.
+- **Salah sebut / ayat bercanggah dibuang** (cth. "bukan angka yang sangat besar" yang bercanggah dengan "prestasi terbaik").
+- Spec setiap video disimpan di `projects/`.

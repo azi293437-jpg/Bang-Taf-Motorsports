@@ -7,7 +7,7 @@ OUT = S + '/out'; os.makedirs(OUT, exist_ok=True)
 pieces = R.pieces; SPEECH = R.TOTAL / FPS; TOTAL = (R.TOTAL + R.OUT_N) / FPS
 
 # ---------- 1. voice: cut, speed, clean, normalise
-ins = {'A': 0, 'B': 1, 'C': 2}
+KEYS = sorted(R.CLIPS); ins = {k: i for i, k in enumerate(KEYS)}
 fl = []
 for k, p in enumerate(pieces):
     d = p['n'] / FPS * SPEED
@@ -19,7 +19,7 @@ fl.append(''.join(f'[a{k}]' for k in range(len(pieces))) + f'concat=n={len(piece
           'acompressor=threshold=-20dB:ratio=3:attack=6:release=120:makeup=2,'
           'loudnorm=I=-16:TP=-2:LRA=7,aresample=44100[v]')
 open(OUT + '/voice_filter.txt', 'w').write(';\n'.join(fl))
-subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', R.CLIPS['A'], '-i', R.CLIPS['B'], '-i', R.CLIPS['C'],
+subprocess.run(['ffmpeg', '-v', 'error', '-y'] + sum([['-i', R.CLIPS[k]] for k in KEYS], []) + [
                 '-filter_complex_script', OUT + '/voice_filter.txt', '-map', '[v]', '-ac', '1', '-ar', str(SR), OUT + '/voice.wav'], check=True)
 
 def load(p):
@@ -42,8 +42,8 @@ gain = 0.22 - 0.13 * act       # ~-13dB when idle, ~-21dB under voice
 def piece_t(txt):
     for p in pieces:
         if txt in p['txt']: return p['f0'] / FPS, p['n'] / FPS
-for key, hold in (('{TAK!}', 1.0), ('{TETAPI!}', 0.9)):
-    t0, _ = piece_t(key); a = int((t0 - 0.05) * SR); b = int((t0 + hold) * SR)
+for p in [q for q in pieces if q['op'].get('musicstop')]:
+    t0 = p['f0'] / FPS; hold = p['op']['musicstop']; a = int((t0 - 0.05) * SR); b = int((t0 + hold) * SR)
     gain[a:b] = 0.0
     r = int(0.4 * SR); gain[b:b + r] *= np.linspace(0, 1, r)
 fi = int(0.4 * SR); fo = int(1.5 * SR)
@@ -67,7 +67,7 @@ for p in pieces:
     if p['i'] > 0 and pieces[p['i'] - 1]['op'].get('bg') != p['op'].get('bg'):
         t = p['f0'] / FPS
         if not any(abs(t - e[0]) < 0.25 and e[1] == 'whoosh' for e in ev): ev.append((t - 0.12, 'whoosh'))
-t0, _ = piece_t('{TETAPI!}'); ev.append((t0 - 1.0, 'riser'))
+ev += [(q['f0'] / FPS - 1.0, 'riser') for q in pieces if q['op'].get('riser')]
 ev += [(SPEECH - 0.15, 'whoosh'), (SPEECH + 0.05, 'boom'), (SPEECH + 0.45, 'pop')]
 for t, n in ev:
     a = SFX[n] * VOL[n]; i = max(0, int(t * SR)); j = min(N, i + len(a))

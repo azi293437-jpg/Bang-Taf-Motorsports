@@ -5,10 +5,12 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 S = os.path.dirname(os.path.abspath(__file__))
 _sp = importlib.util.spec_from_file_location('spec', os.path.join(S, 'spec.py')); SP = importlib.util.module_from_spec(_sp); _sp.loader.exec_module(SP)
 P, O = SP.P, SP.O
+OUTRO = getattr(SP, 'OUTRO', ('FOLLOW *Bang Taf*', 'Tips kereta & loan'))
 
 FPS = 30; W, H = 1080, 1920; SPEED = 1.1
-CLIPS = {'A': S + '/raw/A_C2C7.mov', 'B': S + '/raw/B_CFC2.mov', 'C': S + '/raw/C_F48F.mov'}
-ISL = {'A': 'A_C2C7', 'B': 'B_CFC2', 'C': 'C_F48F'}
+import glob as _g
+CLIPS = {os.path.basename(f)[0].upper(): f for f in sorted(_g.glob(S + '/raw/*.mov'))}
+ISL = {k: os.path.splitext(os.path.basename(f))[0] for k, f in CLIPS.items()}
 FD = '/usr/share/fonts/opentype/inter/'
 GOLD = (255, 201, 40); RED = (255, 72, 72); GREEN = (80, 230, 120); NAVY = (12, 22, 52); WHITE = (255, 255, 255)
 CMAP = {'*': GOLD, '{': RED, '[': GREEN}
@@ -113,6 +115,13 @@ for p in pieces:
 captions.sort(key=lambda x: x[0])
 
 # ------------------------------------------------------------------ drawing helpers
+def fmt_count(val, v):
+    s = val.strip(); pre = '+' if s.startswith('+') else ''; suf = '%' if s.endswith('%') else ''
+    core = s.strip('+%'); dec = len(core.split('.')[1]) if '.' in core else 0
+    num = float(core.replace(',', '')) * v
+    out = f"{num:,.{dec}f}" if ',' in core else f"{num:.{dec}f}"
+    return pre + out + suf
+
 def ease_back(x):
     x = min(max(x, 0), 1); c1 = 1.70158; c3 = c1 + 1
     return 1 + c3 * (x - 1) ** 3 + c1 * (x - 1) ** 2
@@ -227,6 +236,10 @@ def bg_frame(name, t):
 
 # ------------------------------------------------------------------ keying
 RAMP = np.clip((1280 - np.arange(1280)) / 140.0, 0, 1)[:, None]
+_yy, _xx = np.mgrid[0:1280, 0:720]
+GM = np.clip(((_yy - ((_xx - 500) * 0.62)) / 12.0), 0, 1)            # top-right wedge
+GM = GM * np.where((_xx > 700) & (_yy < 860), 0, 1)                   # right rim
+RAMP = RAMP * GM
 def key(fr):
     f = fr.astype(np.int16)
     r, g, b = f[..., 0], f[..., 1], f[..., 2]
@@ -243,7 +256,7 @@ def key(fr):
 
 def person_full(canvas, kim, z, dx=0, dy=0):
     s = 1.5 * z
-    cx, cy = 540 + dx, 650 + dy
+    cx, cy = 540 + dx, 730 + dy
     data = (1 / s, 0, 360 - cx / s, 0, 1 / s, 600 - cy / s)
     p = kim.transform((W, H), Image.AFFINE, data, resample=Image.BILINEAR)
     canvas.alpha_composite(p)
@@ -302,7 +315,16 @@ class Ov:
                 o = Image.new('RGBA', (max(t_.width, sub.width), t_.height + sub.height - 20), (0, 0, 0, 0))
                 o.alpha_composite(sub, ((o.width - sub.width) // 2, 0)); o.alpha_composite(t_, ((o.width - t_.width) // 2, sub.height - 30))
                 return o
-            im = s.c('i', mk); paste(cv, im, 540, p['y'], sc * (1 + 0.02 * math.sin(u * 6)), al)
+            if p.get('count') and u < 1.0:
+                txt = fmt_count(p['text'], ease_out(u / 0.9))
+                f = font('Inter-Black.otf', p['size']); t_ = rich([(txt, GOLD)], f, stroke=12, sc=(20, 10, 0))
+                sub = s.c('sub', lambda: pill(None, p['sub'], 40, WHITE, (220, 30, 40, 245), WHITE))
+                full = s.c('i', mk)
+                im = Image.new('RGBA', full.size, (0, 0, 0, 0)); im.alpha_composite(sub, ((im.width - sub.width) // 2, 0))
+                im.alpha_composite(t_, (max(0, (im.width - t_.width) // 2), sub.height - 30))
+            else:
+                im = s.c('i', mk)
+            paste(cv, im, 540, p['y'], sc * (1 + 0.02 * math.sin(u * 6)), al)
         elif k == 'sticker':
             e = emoji(p['emoji'], p['size'])
             rot = 6 * math.sin(u * 5)
@@ -324,7 +346,25 @@ class Ov:
                 b = rbox(w + 16, h + 16, 30, (255, 255, 255, 255)); b.alpha_composite(im, (8, 8))
                 return shadowed(b, 16, 10, 160)
             im = s.c('i', mk)
-            paste(cv, im, 540, p['y'] + im.height / 2 - 30, 0.85 + 0.15 * sc, min(1, u / 0.12) * al)
+            x = p.get('x', 540)
+            paste(cv, im, x, p['y'] + im.height / 2 - 30, 0.85 + 0.15 * sc, min(1, u / 0.12) * al, p.get('rot', 0))
+            if p.get('src') or p.get('label'):
+                lab = s.c('s', lambda: pill(None, ('Sumber: ' + p['src']) if p.get('src') else p['label'], 28 if p.get('src') else 34, WHITE, (0, 0, 0, 200), None if p.get('src') else GOLD))
+                paste(cv, lab, x, p['y'] + im.height - 50, 0.85 + 0.15 * sc, min(1, u / 0.12) * al)
+        elif k == 'gif':
+            def load():
+                g = Image.open(f"{S}/assets/{p['file']}"); fr = []; ds = []
+                w = p['w']
+                for i in range(g.n_frames):
+                    g.seek(i); im = g.convert('RGBA'); h = int(im.height * w / im.width)
+                    im = im.resize((w, h), Image.LANCZOS)
+                    b = rbox(w + 16, h + 16, 26, (255, 255, 255, 255)); b.alpha_composite(im, (8, 8))
+                    fr.append(shadowed(b, 14, 8, 160)); ds.append(max(0.03, g.info.get('duration', 70) / 1000))
+                return fr, ds
+            fr, ds = s.c('g', load)
+            tt = (u * p.get('speed', 1.0)) % sum(ds); j = 0
+            while tt > ds[j]: tt -= ds[j]; j += 1
+            paste(cv, fr[j], p.get('x', 540), p['y'], sc, al, p.get('rot', 0))
         elif k in ('icons',):
             def mkt(): return rich(toks(p['title']), font('Inter-ExtraBold.otf', 52), stroke=5)
             ti = s.c('t', mkt); paste(cv, ti, 540, p['y'], sc, al)
@@ -410,8 +450,7 @@ class Ov:
             for j, (em, lab, val, tt) in enumerate(p['items']):
                 if t < tt: continue
                 v = ease_out((t - tt) / 0.8)
-                num = float(val.rstrip('%')); dec = len(val.split('.')[1].rstrip('%')) if '.' in val else 0
-                shown = f"{num * v:.{dec}f}%"
+                shown = fmt_count(val, v) + ('' if val.endswith('%') else ' unit')
                 def mkb(em=em, lab=lab):
                     b = rbox(940, 232, 30, (255, 255, 255, 245), GOLD, 5)
                     e = emoji(em, 120); b.alpha_composite(e, (34, (240 - e.height) // 2))
@@ -430,13 +469,42 @@ class Ov:
                 else:
                     x = 540; y = p['y'] + j * 100
                 paste(cv, im, x, y, ease_back((t - tt) / 0.22), al)
+        elif k == 'share':
+            def mkp():
+                b = rbox(960, 800, 36, (10, 16, 40, 230), GOLD, 4)
+                ti = rich(toks('*Market share* Proton • Ogos 2026'), font('Inter-Black.otf', 48), maxw=900)
+                b.alpha_composite(ti, ((960 - ti.width) // 2, 30)); return shadowed(b)
+            pan = s.c('p', mkp); top = 250
+            paste(cv, pan, 540, top + pan.height / 2 - 30, 0.9 + 0.1 * sc, min(1, u / 0.12) * al)
+            if t >= p['t1']:
+                v = ease_out((t - p['t1']) / 0.9); R0 = 200; cx, cy = 300, top + 360
+                d = Image.new('RGBA', (2 * R0 + 4, 2 * R0 + 4), (0, 0, 0, 0)); dd = ImageDraw.Draw(d)
+                dd.ellipse([2, 2, 2 * R0 + 2, 2 * R0 + 2], fill=(60, 70, 100, 255))
+                dd.pieslice([2, 2, 2 * R0 + 2, 2 * R0 + 2], -90, -90 + 360 * 0.279 * v, fill=GOLD)
+                dd.ellipse([2 + 70, 2 + 70, 2 * R0 + 2 - 70, 2 * R0 + 2 - 70], fill=(10, 16, 40, 255))
+                pt = rich([(fmt_count('27.9%', v), WHITE)], font('Inter-Black.otf', 70))
+                d.alpha_composite(pt, ((d.width - pt.width) // 2, (d.height - pt.height) // 2))
+                paste(cv, d, cx, cy, ease_back((t - p['t1']) / 0.3), al)
+                lab = s.c('lb', lambda: rich([('Proton', GOLD), ('vs', WHITE), ('jenama', WHITE), ('lain', WHITE)], font('Inter-ExtraBold.otf', 40)))
+                paste(cv, lab, cx, cy + R0 + 45, 1, al)
+            if t >= p['t2']:
+                for j in range(4):
+                    tj = p['t2'] + j * 0.12
+                    if t < tj: continue
+                    def mk(j=j):
+                        b = rbox(170, 140, 24, (255, 201, 40, 255) if j == 0 else (255, 255, 255, 235))
+                        e = emoji('🚗', 100); b.alpha_composite(e, ((170 - e.width) // 2, (140 - e.height) // 2)); return b
+                    paste(cv, s.c(('c', j), mk), 640 + (j % 2) * 190, top + 230 + (j // 2) * 165, ease_back((t - tj) / 0.22), al)
+                if t > p['t2'] + 0.6:
+                    lt = s.c('lt', lambda: pill('🏁', '*1 dari 4* kereta baru', 40))
+                    paste(cv, lt, 735, top + 690, ease_back((t - p['t2'] - 0.6) / 0.25), al)
         elif k == 'banner':
             def mk():
                 txt = p['text']; em, rest = txt.split(' ', 1)
                 col = (230, 30, 40, 250) if p.get('color') != 'gold' else (255, 201, 40, 250)
                 return pill(em, rest, 64, WHITE if p.get('color') != 'gold' else NAVY, col, WHITE)
             j = 5 * math.sin(u * 40) * math.exp(-u * 4)
-            paste(cv, s.c('i', mk), 540 + j, 300, sc, al)
+            paste(cv, s.c('i', mk), 540 + j, p.get('y', 300), sc, al)
         elif k == 'compare':
             def mkp():
                 b = rbox(960, 760, 36, (10, 16, 40, 230), GOLD, 4)
@@ -540,7 +608,7 @@ def compose(fr_raw, p, fi):
         if o.t0 <= t < o.t1: o.draw(cv, t)
     watermark(cv)
     # captions
-    cy = 1300 if layout == 'full' else 1125
+    cy = 1335 if layout == 'full' else 1125
     for c in captions:
         if c[0] <= t < c[1]:
             k = id(c)
@@ -562,10 +630,10 @@ def outro(fi):
     sc = ease_back(u / 0.45)
     paste(cv, big, 540, 820 - 20 * ease_out(u / 1.5), sc * (1 + 0.02 * u))
     if u > 0.45:
-        tx = pill('🔔', 'FOLLOW *Bang Taf*', 64, maxw=980)
+        tx = pill('🔔', OUTRO[0], 64, maxw=980)
         paste(cv, tx, 540, 1230, ease_back((u - 0.45) / 0.3))
     if u > 0.75:
-        t2 = pill('🚗', 'Tips kereta & loan', 44, WHITE, (220, 30, 40, 245), WHITE)
+        t2 = pill('🚗', OUTRO[1], 44, WHITE, (220, 30, 40, 245), WHITE)
         paste(cv, t2, 540, 1370, ease_back((u - 0.75) / 0.3))
     if u < 0.12:
         cv.alpha_composite(Image.new('RGBA', (W, H), (255, 255, 255, int(170 * (1 - u / 0.12)))))
