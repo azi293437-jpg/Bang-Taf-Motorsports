@@ -1,0 +1,75 @@
+1
+00:00:00,550 --> 00:00:03,014
+Today's car isn't just a machine.
+
+2
+00:00:03,054 --> 00:00:06,907
+It's a computer, an engine and sensors — working as one.
+
+3
+00:00:07,300 --> 00:00:09,813
+Early cars were mostly mechanical.
+
+4
+00:00:09,853 --> 00:00:14,447
+Then came electronics: fuel injection, ABS and airbags.
+
+5
+00:00:14,487 --> 00:00:17,260
+Now, cars are becoming intelligent.
+
+6
+00:00:17,300 --> 00:00:21,160
+At its core is the ECU — the Electronic Control Unit.
+
+7
+00:00:21,200 --> 00:00:22,725
+It reads sensor data,
+
+8
+00:00:22,765 --> 00:00:27,260
+then controls the engine, transmission and more — in milliseconds.
+
+9
+00:00:27,300 --> 00:00:29,609
+The same intelligence powers safety:
+
+10
+00:00:29,649 --> 00:00:32,759
+360° cameras, blind spot monitoring,
+
+11
+00:00:32,799 --> 00:00:34,984
+lane detection and ADAS.
+
+12
+00:00:35,024 --> 00:00:37,651
+Availability varies by model.
+
+13
+00:00:39,300 --> 00:00:41,394
+Proton is part of this shift.
+
+14
+00:00:41,434 --> 00:00:44,862
+Models like the e.MAS 7 and X50 Flagship
+
+15
+00:00:44,902 --> 00:00:48,420
+offer 360° cameras and driver assistance.
+
+16
+00:00:48,460 --> 00:00:51,260
+Check the official specs for each variant.
+
+17
+00:00:51,300 --> 00:00:53,928
+Smarter cars mean safer journeys.
+
+18
+00:00:53,968 --> 00:00:56,084
+The future of driving is here.
+
+19
+00:00:56,124 --> 00:00:59,640
+Follow BANG TAF for more automotive insights.

@@ -1,0 +1,411 @@
+{
+ "_notes": "say = text sent to TTS (numbers/acronyms normalised for pronunciation). show = subtitle text; *word* is highlighted in electric blue.",
+ "scenes": [
+  {
+   "id": 1,
+   "start": 0.0,
+   "end": 7.0,
+   "name": "hook"
+  },
+  {
+   "id": 2,
+   "start": 7.0,
+   "end": 17.0,
+   "name": "evolution"
+  },
+  {
+   "id": 3,
+   "start": 17.0,
+   "end": 27.0,
+   "name": "ecu"
+  },
+  {
+   "id": 4,
+   "start": 27.0,
+   "end": 39.0,
+   "name": "safety"
+  },
+  {
+   "id": 5,
+   "start": 39.0,
+   "end": 51.0,
+   "name": "proton"
+  },
+  {
+   "id": 6,
+   "start": 51.0,
+   "end": 60.0,
+   "name": "ending"
+  }
+ ],
+ "en": {
+  "title": "Bang Taf Automotive Intelligence — English",
+  "vo": {
+   "1": [
+    {
+     "say": "Today's car isn't just a machine.",
+     "show": "Today's car isn't *just a machine*."
+    },
+    {
+     "say": "It's a computer, an engine and sensors, working as one.",
+     "show": "It's a *computer*, an *engine* and *sensors* — working as one."
+    }
+   ],
+   "2": [
+    {
+     "say": "Early cars were mostly mechanical.",
+     "show": "Early cars were mostly *mechanical*."
+    },
+    {
+     "say": "Then came electronics: fuel injection, A.B.S. and airbags.",
+     "show": "Then came *electronics*: fuel injection, *ABS* and airbags."
+    },
+    {
+     "say": "Now, cars are becoming intelligent.",
+     "show": "Now, cars are becoming *intelligent*."
+    }
+   ],
+   "3": [
+    {
+     "say": "At its core is the ECU, the Electronic Control Unit.",
+     "show": "At its core is the *ECU* — the *Electronic Control Unit*."
+    },
+    {
+     "say": "It reads sensor data,",
+     "show": "It reads *sensor* data,"
+    },
+    {
+     "say": "then controls the engine, transmission and more, in milliseconds.",
+     "show": "then controls the *engine*, *transmission* and more — in *milliseconds*."
+    }
+   ],
+   "4": [
+    {
+     "say": "The same intelligence powers safety:",
+     "show": "The same intelligence powers *safety*:"
+    },
+    {
+     "say": "three-sixty cameras, blind spot monitoring,",
+     "show": "*360° cameras*, *blind spot monitoring*,"
+    },
+    {
+     "say": "lane detection and ADAS.",
+     "show": "*lane detection* and *ADAS*."
+    },
+    {
+     "say": "Availability varies by model.",
+     "show": "Availability *varies by model*."
+    }
+   ],
+   "5": [
+    {
+     "say": "Proton is part of this shift.",
+     "show": "*Proton* is part of this shift."
+    },
+    {
+     "say": "Models like the e-Mas seven and X fifty Flagship",
+     "show": "Models like the *e.MAS 7* and *X50 Flagship*"
+    },
+    {
+     "say": "offer three-sixty cameras and driver assistance.",
+     "show": "offer *360° cameras* and *driver assistance*."
+    },
+    {
+     "say": "Check the official specs for each variant.",
+     "show": "Check the *official specs* for each variant."
+    }
+   ],
+   "6": [
+    {
+     "say": "Smarter cars mean safer journeys.",
+     "show": "Smarter cars mean *safer journeys*."
+    },
+    {
+     "say": "The future of driving is here.",
+     "show": "The *future of driving* is here."
+    },
+    {
+     "say": "Follow Bang Taf for more automotive insights.",
+     "show": "Follow *BANG TAF* for more automotive insights."
+    }
+   ]
+  },
+  "text": {
+   "car": "CAR",
+   "computer": "COMPUTER",
+   "engine": "ENGINE",
+   "sensors": "SENSORS",
+   "s1tag": "WHY ARE MODERN CARS BECOMING SMARTER?",
+   "mechanical": "MECHANICAL",
+   "electronic": "ELECTRONIC",
+   "intelligent": "INTELLIGENT",
+   "mechTags": "Carburettor · Cables · Linkages",
+   "elecTags": "Fuel injection · ABS · Airbags",
+   "intTags": "Sensors · Software · ADAS",
+   "evoTitle": "THE EVOLUTION",
+   "ecuTitle": "THE BRAIN OF THE CAR",
+   "ecuName": "ECU",
+   "ecuFull": "ELECTRONIC CONTROL UNIT",
+   "nEngine": "ENGINE",
+   "nTrans": "TRANSMISSION",
+   "nSensors": "SENSORS",
+   "nBrakes": "BRAKES / ABS",
+   "nControl": "CONTROL SYSTEMS",
+   "ecuEq": "ECU + SENSORS + CONTROL SYSTEMS",
+   "ecuFact": "Modern cars can use dozens of ECUs",
+   "inputs": "INPUT",
+   "outputs": "OUTPUT",
+   "safetyTitle": "SMART SAFETY TECHNOLOGY",
+   "f360": "360° CAMERA",
+   "fBsm": "BLIND SPOT MONITORING",
+   "fLane": "LANE DETECTION",
+   "fAdas": "ADAS",
+   "adasSub": "Adaptive cruise · Emergency braking",
+   "safetyNote": "Examples of available technologies — not standard on every vehicle.",
+   "warning": "VEHICLE DETECTED",
+   "laneOk": "LANE CENTRED",
+   "braking": "DISTANCE MONITORED",
+   "protonTitle": "PROTON TECHNOLOGY",
+   "illus": "Illustrative 3D wireframe · not an official image",
+   "protonNote": "Malaysian-market spec sheets (2026 model year). Features vary by variant — confirm at proton.com",
+   "future": "THE FUTURE OF DRIVING IS HERE.",
+   "cta1": "FOLLOW BANG TAF",
+   "cta2": "FOR MORE AUTOMOTIVE INSIGHTS",
+   "tagline": "AUTOMOTIVE INTELLIGENCE",
+   "follow": "FOLLOW",
+   "cards": [
+    {
+     "model": "PROTON e.MAS 7",
+     "sub": "Fully electric SUV · Prime & Premium",
+     "body": "suv_ev",
+     "items": [
+      [
+       "INFOTAINMENT",
+       "15.4-inch 2.5K touchscreen · Flyme Auto"
+      ],
+      [
+       "CAMERA",
+       "360° surround-view camera"
+      ],
+      [
+       "DRIVER ASSIST",
+       "Adaptive cruise (stop & go) · AEB · Lane keeping"
+      ],
+      [
+       "CONNECTIVITY",
+       "Wireless Apple CarPlay (added via OTA, 2025)"
+      ]
+     ]
+    },
+    {
+     "model": "PROTON X50 FLAGSHIP",
+     "sub": "B-segment SUV · 2026 model year",
+     "body": "suv_compact",
+     "items": [
+      [
+       "INFOTAINMENT",
+       "14.6-inch touchscreen"
+      ],
+      [
+       "CAMERA",
+       "360° camera"
+      ],
+      [
+       "DRIVER ASSIST",
+       "Adaptive cruise (stop & go) · Lane centring"
+      ],
+      [
+       "COMFORT",
+       "Blind spot monitoring · Panoramic sunroof"
+      ]
+     ]
+    }
+   ]
+  }
+ },
+ "ms": {
+  "title": "Bang Taf Automotive Intelligence — Bahasa Melayu",
+  "vo": {
+   "1": [
+    {
+     "say": "Kereta hari ini bukan sekadar mesin.",
+     "show": "Kereta hari ini bukan *sekadar mesin*."
+    },
+    {
+     "say": "Ia gabungan komputer, enjin dan sensor.",
+     "show": "Ia gabungan *komputer*, *enjin* dan *sensor*."
+    }
+   ],
+   "2": [
+    {
+     "say": "Dahulu, kereta hampir sepenuhnya mekanikal.",
+     "show": "Dahulu, kereta hampir sepenuhnya *mekanikal*."
+    },
+    {
+     "say": "Kemudian hadir elektronik: suntikan bahan api, brek ei bi es, dan beg udara.",
+     "show": "Kemudian hadir *elektronik*: suntikan bahan api, brek *ABS* dan beg udara."
+    },
+    {
+     "say": "Kini, kereta semakin pintar.",
+     "show": "Kini, kereta semakin *pintar*."
+    }
+   ],
+   "3": [
+    {
+     "say": "Di tengahnya ialah i si yu, unit kawalan elektronik.",
+     "show": "Di tengahnya ialah *ECU* — *Unit Kawalan Elektronik*."
+    },
+    {
+     "say": "Ia membaca data sensor,",
+     "show": "Ia membaca data *sensor*,"
+    },
+    {
+     "say": "lalu mengawal enjin, transmisi dan sistem lain dalam milisaat.",
+     "show": "lalu mengawal *enjin*, *transmisi* dan sistem lain dalam *milisaat*."
+    }
+   ],
+   "4": [
+    {
+     "say": "Kecerdasan ini memperkasa keselamatan:",
+     "show": "Kecerdasan ini memperkasa *keselamatan*:"
+    },
+    {
+     "say": "kamera tiga ratus enam puluh, pemantauan titik buta,",
+     "show": "*kamera 360°*, *pemantauan titik buta*,"
+    },
+    {
+     "say": "pengesanan lorong dan ei das.",
+     "show": "*pengesanan lorong* dan *ADAS*."
+    },
+    {
+     "say": "Ciri berbeza mengikut model.",
+     "show": "Ciri *berbeza mengikut model*."
+    }
+   ],
+   "5": [
+    {
+     "say": "Proton tidak ketinggalan.",
+     "show": "*Proton* tidak ketinggalan."
+    },
+    {
+     "say": "Model seperti i mas tujuh dan eks lima puluh fleksyip",
+     "show": "Model seperti *e.MAS 7* dan *X50 Flagship*"
+    },
+    {
+     "say": "dilengkapi kamera tiga ratus enam puluh dan bantuan pemandu.",
+     "show": "dilengkapi *kamera 360°* dan *bantuan pemandu*."
+    },
+    {
+     "say": "Semak spesifikasi rasmi.",
+     "show": "Semak *spesifikasi rasmi* setiap varian."
+    }
+   ],
+   "6": [
+    {
+     "say": "Kereta pintar, perjalanan lebih selamat.",
+     "show": "Kereta pintar, perjalanan lebih *selamat*."
+    },
+    {
+     "say": "Masa depan pemanduan sudah tiba.",
+     "show": "*Masa depan pemanduan* sudah tiba."
+    },
+    {
+     "say": "Ikuti Bang Taf untuk info automotif.",
+     "show": "Ikuti *BANG TAF* untuk info automotif."
+    }
+   ]
+  },
+  "text": {
+   "car": "KERETA",
+   "computer": "KOMPUTER",
+   "engine": "ENJIN",
+   "sensors": "SENSOR",
+   "s1tag": "KENAPA KERETA MODEN SEMAKIN PINTAR?",
+   "mechanical": "MEKANIKAL",
+   "electronic": "ELEKTRONIK",
+   "intelligent": "PINTAR",
+   "mechTags": "Karburetor · Kabel · Rangkaian tuas",
+   "elecTags": "Suntikan bahan api · ABS · Beg udara",
+   "intTags": "Sensor · Perisian · ADAS",
+   "evoTitle": "EVOLUSI KERETA",
+   "ecuTitle": "OTAK KERETA",
+   "ecuName": "ECU",
+   "ecuFull": "UNIT KAWALAN ELEKTRONIK",
+   "nEngine": "ENJIN",
+   "nTrans": "TRANSMISI",
+   "nSensors": "SENSOR",
+   "nBrakes": "BREK / ABS",
+   "nControl": "SISTEM KAWALAN",
+   "ecuEq": "ECU + SENSOR + SISTEM KAWALAN",
+   "ecuFact": "Kereta moden boleh menggunakan berpuluh-puluh ECU",
+   "inputs": "INPUT",
+   "outputs": "OUTPUT",
+   "safetyTitle": "TEKNOLOGI KESELAMATAN PINTAR",
+   "f360": "KAMERA 360°",
+   "fBsm": "PEMANTAUAN TITIK BUTA",
+   "fLane": "PENGESANAN LORONG",
+   "fAdas": "ADAS",
+   "adasSub": "Kawalan laju adaptif · Brek kecemasan",
+   "safetyNote": "Contoh teknologi yang tersedia — bukan standard pada setiap kenderaan.",
+   "warning": "KENDERAAN DIKESAN",
+   "laneOk": "DALAM LORONG",
+   "braking": "JARAK DIPANTAU",
+   "protonTitle": "TEKNOLOGI PROTON",
+   "illus": "Ilustrasi wireframe 3D · bukan imej rasmi",
+   "protonNote": "Helaian spesifikasi pasaran Malaysia (model 2026). Ciri berbeza mengikut varian — semak di proton.com",
+   "future": "MASA DEPAN PEMANDUAN SUDAH TIBA.",
+   "cta1": "IKUTI BANG TAF",
+   "cta2": "UNTUK LEBIH BANYAK INFO AUTOMOTIF",
+   "tagline": "AUTOMOTIVE INTELLIGENCE",
+   "follow": "IKUTI",
+   "cards": [
+    {
+     "model": "PROTON e.MAS 7",
+     "sub": "SUV elektrik sepenuhnya · Prime & Premium",
+     "body": "suv_ev",
+     "items": [
+      [
+       "INFOTAINMEN",
+       "Skrin sentuh 15.4 inci 2.5K · Flyme Auto"
+      ],
+      [
+       "KAMERA",
+       "Kamera pandangan sekeliling 360°"
+      ],
+      [
+       "BANTUAN PEMANDU",
+       "Kawalan laju adaptif (stop & go) · AEB · Penjagaan lorong"
+      ],
+      [
+       "KETERHUBUNGAN",
+       "Apple CarPlay tanpa wayar (melalui OTA, 2025)"
+      ]
+     ]
+    },
+    {
+     "model": "PROTON X50 FLAGSHIP",
+     "sub": "SUV segmen-B · model 2026",
+     "body": "suv_compact",
+     "items": [
+      [
+       "INFOTAINMEN",
+       "Skrin sentuh 14.6 inci"
+      ],
+      [
+       "KAMERA",
+       "Kamera 360°"
+      ],
+      [
+       "BANTUAN PEMANDU",
+       "Kawalan laju adaptif (stop & go) · Pemusatan lorong"
+      ],
+      [
+       "KESELESAAN",
+       "Pemantauan titik buta · Bumbung panoramik"
+      ]
+     ]
+    }
+   ]
+  }
+ }
+}
