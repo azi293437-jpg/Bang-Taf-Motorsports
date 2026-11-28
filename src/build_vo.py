@@ -69,7 +69,7 @@ def main():
 
         def clarity(y, text):
             y16 = librosa.resample(y, orig_sr=SR, target_sr=16000)
-            hyp = asr(y16, generate_kwargs={'language': 'malay'})['text']
+            hyp = asr(y16, generate_kwargs={'language': 'malay', 'max_new_tokens': 64})['text']
             return difflib.SequenceMatcher(None, norm(text), norm(hyp)).ratio()
 
     track = np.zeros(int(TOTAL * SR), np.float32)

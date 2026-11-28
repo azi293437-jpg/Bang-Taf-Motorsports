@@ -281,23 +281,39 @@ def main():
     # voice polish: high-pass, gentle presence lift, light compression
     v = hp(vo, 80)
     v = v + 0.25 * bp(v, 2500, 6000)
-    thr = 0.25
-    mag = np.abs(v); comp = np.where(mag > thr, thr + (mag - thr) / 3, mag)
+    v = v / (np.max(np.abs(v)) + 1e-9)
+    thr = 0.12
+    mag = np.abs(v); comp = np.where(mag > thr, thr + (mag - thr) / 4, mag)
     v = np.sign(v) * comp
-    v = v / (np.max(np.abs(v)) + 1e-9) * 0.8
+    v = v / (np.max(np.abs(v)) + 1e-9) * 0.9
     voice = np.stack([v, v], 1)
     voice = reverb(voice, 0.9, 0.07, seed=4)
 
     mus = music(); fx = sfx()
     d = duck_env(v)[:, None]
-    mus_g = 0.55 * (1 - 0.6 * d)
-    fx_g = 0.75 * (1 - 0.35 * d)
+    mus_g = 0.45 * (1 - 0.55 * d)
+    fx_g = 0.6 * (1 - 0.45 * d)
     mix = voice * 1.0 + mus * mus_g + fx * fx_g
     fade = np.ones(N); fade[-int(0.8 * SR):] = np.linspace(1, 0, int(0.8 * SR)) ** 1.5
     mix *= fade[:, None]
     mix = np.tanh(mix * 1.1) / 1.1
     mix /= np.max(np.abs(mix)) + 1e-9
-    sf.write(build / f'mix_{lang}.wav', (mix * 0.9).astype(np.float32), SR, subtype='PCM_24')
+    mix = mix * 0.9
+    # loudness-normalise to -14 LUFS (social platform target), true peak kept below -1 dBTP
+    tmp = build / f'_tmp_{lang}.wav'
+    sf.write(tmp, mix.astype(np.float32), SR, subtype='FLOAT')
+    import re, subprocess
+    log = subprocess.run(['ffmpeg', '-hide_banner', '-i', str(tmp), '-af', 'ebur128', '-f', 'null', '-'], capture_output=True, text=True).stderr
+    lufs = float(re.findall(r'I:\s+(-?[\d.]+) LUFS', log)[-1])
+    gain = 10 ** ((-14.0 - lufs) / 20)
+    mix = mix * min(gain, 0.89 / np.max(np.abs(mix)))
+    tmp.unlink()
+    print(f'integrated {lufs:.1f} LUFS -> gain {20 * np.log10(gain):+.1f} dB')
+    sf.write(build / f'mix_{lang}.wav', mix.astype(np.float32), SR, subtype='PCM_24')
+    sp = d[:, 0] > 0.5
+    db = lambda x: 20 * np.log10(np.sqrt(np.mean(x ** 2)) + 1e-9)
+    bed = (mus * mus_g + fx * fx_g).mean(1)
+    print(f'voice {db(v[sp]):.1f} dB | music+sfx under voice {db(bed[sp]):.1f} dB | in gaps {db(bed[~sp]):.1f} dB')
     sf.write(build / 'music_sfx_bed.wav', (np.clip(mus * 0.55 + fx * 0.75, -1, 1) * 0.8).astype(np.float32), SR, subtype='PCM_24')
     print('mix written', build / f'mix_{lang}.wav')
 

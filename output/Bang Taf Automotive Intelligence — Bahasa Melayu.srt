@@ -1,0 +1,75 @@
+1
+00:00:00,550 --> 00:00:03,343
+Kereta hari ini bukan sekadar mesin.
+
+2
+00:00:03,383 --> 00:00:06,966
+Ia gabungan komputer, enjin dan sensor.
+
+3
+00:00:07,300 --> 00:00:10,337
+Dahulu, kereta hampir sepenuhnya mekanikal.
+
+4
+00:00:10,377 --> 00:00:14,961
+Kemudian hadir elektronik: suntikan bahan api, brek ABS dan beg udara.
+
+5
+00:00:15,001 --> 00:00:17,260
+Kini, kereta semakin pintar.
+
+6
+00:00:17,300 --> 00:00:21,006
+Di tengahnya ialah ECU — Unit Kawalan Elektronik.
+
+7
+00:00:21,046 --> 00:00:22,735
+Ia membaca data sensor,
+
+8
+00:00:22,775 --> 00:00:27,260
+lalu mengawal enjin, transmisi dan sistem lain dalam milisaat.
+
+9
+00:00:27,300 --> 00:00:30,234
+Kecerdasan ini memperkasa keselamatan:
+
+10
+00:00:30,274 --> 00:00:34,034
+kamera 360°, pemantauan titik buta,
+
+11
+00:00:34,074 --> 00:00:36,755
+pengesanan lorong dan ADAS.
+
+12
+00:00:36,795 --> 00:00:39,144
+Ciri berbeza mengikut model.
+
+13
+00:00:39,300 --> 00:00:41,133
+Proton tidak ketinggalan.
+
+14
+00:00:41,173 --> 00:00:44,848
+Model seperti e.MAS 7 dan X50 Flagship
+
+15
+00:00:44,888 --> 00:00:48,972
+dilengkapi kamera 360° dan bantuan pemandu.
+
+16
+00:00:49,012 --> 00:00:51,260
+Semak spesifikasi rasmi setiap varian.
+
+17
+00:00:51,300 --> 00:00:54,014
+Kereta pintar, perjalanan lebih selamat.
+
+18
+00:00:54,054 --> 00:00:56,732
+Masa depan pemanduan sudah tiba.
+
+19
+00:00:56,772 --> 00:00:59,699
+Ikuti BANG TAF untuk info automotif.
